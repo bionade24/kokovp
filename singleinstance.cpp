@@ -16,9 +16,11 @@
 */
 #include "singleinstance.h"
 
+#include <QDebug>
+#include <QIODevice>
 #include <QLocalSocket>
 #include <QLocalServer>
-#include <QDebug>
+#include <qflags.h>
 
 SingleInstance::SingleInstance(QString appName, QObject *parent)
     : p_appName(appName), QObject{parent}
@@ -50,7 +52,7 @@ bool SingleInstance::hostServer()
     return ret;
 }
 
-void SingleInstance::sendMessage(QString msg)
+void SingleInstance::sendMessage(const QString &msg)
 {
     p_socket->write(msg.toUtf8());
     p_socket->putChar('\n');
@@ -72,4 +74,5 @@ void SingleInstance::readData()
     QLocalSocket *sock = static_cast<QLocalSocket*>(sender());
     while (sock->canReadLine())
         emit newMessage(sock->readLine());
+
 }

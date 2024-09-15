@@ -119,7 +119,7 @@ void PlayerController::open(const QUrl &file, const QMap<QString, QVariant> &fil
             p->setOption(key,value);
         }
     }
-    p->command(QStringList{"loadfile", file.path()});
+    p->command(QStringList{"loadfile", file.toString()});
 }
 
 void PlayerController::stop()
