@@ -32,7 +32,7 @@ class FileSettingsHash : public QObject
     Q_OBJECT
 public:
     FileSettingsHash(QString directory, PlayerController *player, QObject *parent = nullptr);
-    void loadSettingsFor(QString filename, bool loadTimepos = true);
+    void loadSettingsFor(QString filename, bool loadTimepos = true, bool persistentVolume = false);
     void saveSettingsFor(QString filename, bool saveTimepos = true);
 private:
     void updateCurrentProps(QVariant value);

@@ -25,6 +25,7 @@
 
 #include "program_arg.h"
 
+
 SingleInstance::SingleInstance(QString appName, QObject *parent)
     : p_appName(appName), QObject{parent}
 {}

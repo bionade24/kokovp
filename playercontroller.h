@@ -46,6 +46,9 @@ public:
 
     explicit PlayerController(PlayerWidget *parent = nullptr);
 
+    static const QString volumeLevelConfigKey;
+    static const QString audioMutedConfigKey;
+
     QString currentMediaUrl() { return getProp("path").toString(); }
     QString lastOpenMediaUrl() { return lastMediaUrl; }
 

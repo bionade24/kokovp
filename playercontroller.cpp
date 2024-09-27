@@ -15,16 +15,21 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 #include "playercontroller.h"
+#include "config.h"
 #include "extensions.h"
 #include "helper.h"
 #include "playerwidget.h"
 #include "playlist/playlist.h"
 
+const QString PlayerController::volumeLevelConfigKey = QString("audio/volume_level");
+const QString PlayerController::audioMutedConfigKey = QString("audio/muted");
+
 PlayerController::PlayerController(PlayerWidget *parent)
     : QObject{parent}
 {
     p = parent;
-    prop("volume")->set(50);
+    prop("volume")->set(Config::i().get(volumeLevelConfigKey, 50).toInt());
+    prop("mute")->set(Config::i().get(audioMutedConfigKey, false).toBool());
     prop("pause")->set(true);
     p->setProp("audio-file-auto-exts", Extensions.audio());
     connect(p, &PlayerWidget::fileLoaded, this, &PlayerController::handleMediaLoad);
@@ -96,7 +101,7 @@ void PlayerController::open(const QUrl &url)
         }
     }
 
-    p->command(QStringList{"loadfile", url.toString()});
+    p->command(QStringList{"loadfile", url.toString(), "replace"});
 }
 
 void PlayerController::stop()
