@@ -154,6 +154,9 @@ KokoVP::KokoVP(QWidget *parent)
 
 KokoVP::~KokoVP()
 {
+    //Save player properties here to avoid deadlock
+    Config::i().set(PlayerController::volumeLevelConfigKey, player->getProp("volume"));
+    Config::i().set(PlayerController::audioMutedConfigKey, player->getProp("mute"));
     fileSettings->saveSettingsFor(player->lastOpenFile(), true); // Always save time-pos on exit
 }
 
