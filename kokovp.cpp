@@ -251,6 +251,8 @@ void KokoVP::populateMenu()
     ActionWrapper *nextAct = new ActionWrapper(tr("Next"), QKeySequence("Ctrl+."), playMenu, "next", QIcon::fromTheme("media-skip-forward"));
     connect(nextAct, &QAction::triggered, playlist, &Playlist::next);
 
+    connect(player, &PlayerController::mediaRessourceFinished, playlist, &Playlist::next);
+
     // --- Video ---
     ActionWrapper *fullscreenAct = new ActionWrapper(tr("Fullscreen"), Qt::Key_F, videoMenu, "fullscreen", QIcon::fromTheme("view-fullscreen"));
     fullscreenAct->setCheckable(true);

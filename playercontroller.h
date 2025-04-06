@@ -84,6 +84,8 @@ signals:
     void tracksUpdated();
     void mediaMetaUpdated(QString label, double duration);
     void endMediaRessource(bool wasStopped);
+    void mediaRessourceFinished();
+
 private:
     void handleMediaEnd();
     void handleMediaLoad();

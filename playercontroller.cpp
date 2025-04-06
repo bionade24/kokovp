@@ -16,8 +16,9 @@
 */
 #include "playercontroller.h"
 #include "extensions.h"
-#include "playerwidget.h"
 #include "helper.h"
+#include "playerwidget.h"
+#include "playlist/playlist.h"
 
 PlayerController::PlayerController(PlayerWidget *parent)
     : QObject{parent}
@@ -59,7 +60,8 @@ void PlayerController::handleMediaEnd()
         QUrl url = queuedMediaUrl;
         queuedMediaUrl = QUrl();
         open(url);
-    }
+    } else
+        emit mediaRessourceFinished();
 }
 
 void PlayerController::open(const QUrl &url)
