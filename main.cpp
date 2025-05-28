@@ -70,11 +70,10 @@ int main(int argc, char *argv[])
     }
 
     KokoVP w;
+
     if (parser.positionalArguments().length()>0)
-    {
         w.handleNewMessage(ProgramArgument(ProgramCmd::OPEN, parser.positionalArguments()));
-        w.handleNewMessage(ProgramArgument(ProgramCmd::PLAYLAST));
-    }
+
     QObject::connect(&inst, &SingleInstance::newMessage, &w, &KokoVP::handleNewMessage);
     w.showNormal();
 
