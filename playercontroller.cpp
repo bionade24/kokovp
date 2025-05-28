@@ -190,7 +190,7 @@ void PlayerController::handleMediaLoad()
             t.type = Track::TRACK_TYPE_SUB;
 
         if (t.isExternal)
-            t.mediaUrl = p->getProp(trackAddr + "external-mediaUrl").toString();
+            t.mediaUrl = p->getProp(trackAddr + "external-filename").toString();
 
         p_tracks.append(t);
     }
