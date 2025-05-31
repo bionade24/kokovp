@@ -47,6 +47,7 @@ void PrefMain::load()
     ui->cbRememberFileSettings->setChecked(Config::i().get("play_mode/keep_props").toBool());
     ui->cbRememberTimePos->setChecked(Config::i().get("play_mode/keep_timepos").toBool());
     ui->cbGlobalVolume->setChecked(Config::i().get("play_mode/global_volume").toBool());
+    ui->cbPersistentAudioVolume->setChecked(Config::i().get("audio/persistent_audio_volume").toBool());
     ui->cbHwdec->setCurrentIndex(ui->cbHwdec->findData(Config::i().get("misc/hwdec").toString()));
 
     Config::i().beginGroup("steps");
@@ -67,6 +68,7 @@ void PrefMain::save()
     Config::i().set("play_mode/keep_props", ui->cbRememberFileSettings->isChecked());
     Config::i().set("play_mode/keep_timepos", ui->cbRememberTimePos->isChecked());
     Config::i().set("play_mode/global_volume", ui->cbGlobalVolume->isChecked());
+    Config::i().set("audio/persistent_audio_volume", ui->cbPersistentAudioVolume->isChecked());
     Config::i().set("misc/hwdec", ui->cbHwdec->currentData());
 
     Config::i().beginGroup("steps");
