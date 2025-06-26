@@ -21,6 +21,7 @@
 #include <QDir>
 #include <QUrl>
 
+
 class PlayerWidget;
 class PropertyObserver;
 
@@ -85,6 +86,7 @@ public:
     const QList<Track> &tracks() const { return p_tracks; }
 
 signals:
+    void playbackChanged();
     void tracksUpdated();
     void fileMetaUpdated(QString label, double duration);
     void endFile(bool wasStopped);
