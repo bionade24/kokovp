@@ -29,6 +29,7 @@ class AutohideWidget;
 class FileSettingsHash;
 struct ProgramArgument;
 class QTableView;
+namespace Amber { class MprisPlayer; }
 
 using QActionMap = QMap<QString, QAction*>;
 
@@ -97,6 +98,8 @@ private:
     TracksMenu *secondSubTracksMenu = nullptr;
 
     QActionMap p_actionsMap;
+
+    Amber::MprisPlayer *mpris;
 
     static KokoVP *inst;
 };

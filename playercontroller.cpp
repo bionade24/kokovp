@@ -20,6 +20,7 @@
 #include "playerwidget.h"
 #include "helper.h"
 
+
 const QString PlayerController::volumeLevelConfigKey = QString("audio/volume_level");
 const QString PlayerController::audioMutedConfigKey = QString("audio/muted");
 
@@ -113,6 +114,7 @@ void PlayerController::stop()
 void PlayerController::togglePlayback()
 {
     p->setProp("pause", isPlaying());
+    emit playbackChanged();
 }
 
 void PlayerController::seekAbsolute(double s)
@@ -201,4 +203,5 @@ void PlayerController::handleFileLoad()
 
     emit tracksUpdated();
     emit fileMetaUpdated(p->getProp("media-title").toString(), prop("duration")->get().toDouble());
+    emit playbackChanged();
 }
