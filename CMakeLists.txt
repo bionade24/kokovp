@@ -17,11 +17,41 @@ if(NOT CMAKE_BUILD_TYPE STREQUAL Debug)
     add_compile_definitions(QT_NO_DEBUG_OUTPUT)
 endif()
 
+include(ExternalProject)
+ExternalProject_Add(
+    amber-mpris
+    GIT_REPOSITORY https://github.com/bionade24/amber-mpris.git # Use my downstream to force Qt6 usage
+    GIT_TAG origin/master  # We have to use master for now, until qt6 support is in a release
+    GIT_SHALLOW 1
+    PREFIX ${CMAKE_BINARY_DIR}/external/amber-mpris
+    SOURCE_DIR ${CMAKE_BINARY_DIR}/external/amber-mpris/src
+    BINARY_DIR ${CMAKE_BINARY_DIR}/external/amber-mpris/build
+    INSTALL_DIR ${CMAKE_BINARY_DIR}/external/amber-mpris/install
+    STAMP_DIR ${CMAKE_BINARY_DIR}/external/amber-mpris/stamp
+    CONFIGURE_COMMAND qmake6 <SOURCE_DIR>/amber-mpris.pro -r "PREFIX=<INSTALL_DIR>" "QT_MAJOR_VERSION=6" "CONFIG+=release" "QMAKE_CXX=${CMAKE_CXX_COMPILER}"
+    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM}
+    INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} INSTALL_ROOT=<INSTALL_DIR> install
+    BUILD_ALWAYS OFF
+    UPDATE_COMMAND ""
+)
+
+# Get the install directory for linking
+ExternalProject_Get_Property(amber-mpris INSTALL_DIR)
+
 find_package(QT NAMES Qt6)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools OpenGLWidgets Network Xml)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(mpv REQUIRED mpv)
-pkg_check_modules(AmberMpris REQUIRED ambermpris6)
+
+add_library(AmberMpris SHARED IMPORTED GLOBAL)
+set_target_properties(AmberMpris PROPERTIES
+    IMPORTED_LOCATION "${INSTALL_DIR}/usr/lib/libambermpris6.so"
+    INTERFACE_INCLUDE_DIRECTORIES "${INSTALL_DIR}/usr/include;${INSTALL_DIR}/usr/include/AmberMpris"
+)
+
+file(MAKE_DIRECTORY ${INSTALL_DIR}/usr/include;${INSTALL_DIR}/usr/include/AmberMpris)
+
+add_dependencies(AmberMpris amber-mpris)
 
 # Libraries
 set(LIBRARIES
@@ -31,7 +61,7 @@ set(LIBRARIES
     Qt${QT_VERSION_MAJOR}::Network
     Qt${QT_VERSION_MAJOR}::Xml
     ${mpv_LIBRARIES}
-    ${AmberMpris_LIBRARIES}
+    AmberMpris
 )
 
 set(TS_FILES KokoVP_ru_RU.ts)
@@ -129,9 +159,10 @@ qt_wrap_ui(FORMS ${UI})
 qt_create_translation(QM_FILES ${TS_FILES} ${MAIN_SRC})
 qt_add_resources(QRC_CPP icons.qrc)
 
-include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} "/usr/include/AmberMpris")
+include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
 
 add_executable(kokovp ${MOC_FILES} ${FORMS} ${MAIN_SRC} ${QRC_CPP})
+add_dependencies(kokovp amber-mpris)
 target_link_libraries(kokovp ${LIBRARIES})
 
 qt_add_resources(kokovp "translations" BASE ${CMAKE_BINARY_DIR} PREFIX "i18n" FILES ${QM_FILES})
